@@ -8,6 +8,7 @@ Sensitivity analysis: knot specification
 
 */ 
 
+// load data again
 clear all
 input str6 agegroup year visits popsize
 
@@ -121,7 +122,6 @@ input str6 agegroup year visits popsize
 "80+"  2034       .  161088
 "80+"  2035       .  163346
 end
-
 
 sort agegroup year
 
