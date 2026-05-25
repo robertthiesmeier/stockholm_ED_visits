@@ -1,3 +1,6 @@
+*** Main analysis as presented in the paper ***
+* all data is publically available *
+
 clear all
 
 input str6 agegroup year visits popsize
