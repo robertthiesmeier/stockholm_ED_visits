@@ -153,8 +153,9 @@ gen pred_rate = (pred_visits / popsize) * 1000
 gen predrate_lb = (pred_lb / popsize) * 1000
 gen predrate_ub = (pred_ub / popsize) * 1000
 
-export excel "/Users/robert/Library/CloudStorage/OneDrive-KarolinskaInstitutet/Projects/Clara_ED_visits/data", replace firstrow(variables)
+export excel "/ED_visits/data", replace firstrow(variables)
 
+*** figures ***
 // with rate	
 tw /// 
 	(rarea predrate_lb predrate_ub year if agegroup=="20_34", color("199 223 241%50") lcolor(%0)) ///  
@@ -179,10 +180,8 @@ tw ///
 	xlab(2016(2)2034, nogrid labsize(small)) ylab(#8, format(%9.0fc) nogrid labsize(small)) /// 
 	xtitle("Years", size(small)) ytitle("ED visits per 1.000 population", size(small))
 	
-graph export "/Users/robert/Library/CloudStorage/OneDrive-KarolinskaInstitutet/Projects/Clara_ED_visits/figures/fig1.png", replace width(4000)
+graph export "/fig1.png", replace width(4000)
 
-
-// figures
 tw /// 
 	(rarea pred_lb pred_ub year if agegroup== "20_34", color("199 223 241%50") lcolor(%0)) ///  
     (line pred_visits year if agegroup=="20_34", lcolor("199 223 241") lwidth(medthick)) ///
@@ -201,11 +200,9 @@ tw ///
 	xlab(2016(2)2034, nogrid labsize(small)) ylab(, nogrid labsize(small)) /// 
 	xtitle("Years", size(small)) ytitle("Projected number of ED visits", size(small))
 	
-graph export "/Users/robert/Library/CloudStorage/OneDrive-KarolinskaInstitutet/Projects/Clara_ED_visits/figures/fig2.png", replace width(4000)
+graph export "/fig2.png", replace width(4000)
 
-
-// alternative (single graphs)
-	
+// alternative (single graphs)	
 local titles `""20–34 years" "35–49 years" "50–64 years" "65–79 years" "80+ years""'
 local figs "fig_2034 fig_3549 fig_5064 fig_6579 fig_80p"
 local i = 1
@@ -233,7 +230,7 @@ grc1leg fig_2034 fig_3549 fig_5064 fig_6579 fig_80p, ///
 	
 graph export "/Users/robert/Library/CloudStorage/OneDrive-KarolinskaInstitutet/Projects/Clara_ED_visits/figures/fig3.png", replace width(4000)
 
-// tables
+*** tables ***
 // % change between the years
 foreach y in 2022 2024 2030 2035 {
     gen v`y' = visits if year == `y' & year <= 2024
