@@ -126,10 +126,10 @@ end
 sort agegroup year
 
 gen ed_rate = 1000 * visits / popsize if visits != .
-gen ln_pop  = ln(popsize)
+gen ln_pop = ln(popsize)
 
 foreach spec in noknot knot1 knot2 knot3 {
-    gen pred_rate_`spec'  = .
+    gen pred_rate_`spec' = .
     gen predrate_lb_`spec' = .
     gen predrate_ub_`spec' = .
 }
@@ -204,7 +204,6 @@ foreach k of local groups {
 * Observed rate (all groups)
 gen ed_rate_obs = 1000 * visits / popsize if visits != .
 
-* Plot: one panel per age group
 // define age group labels for titles
 local label_20_34 "20–34 years"
 local label_35_49 "35–49 years"
