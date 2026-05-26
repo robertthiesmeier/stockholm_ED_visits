@@ -228,7 +228,7 @@ grc1leg fig_2034 fig_3549 fig_5064 fig_6579 fig_80p, ///
     title("{bf:ED Visit Projections by Age Group in Stockholm}", size(small)) ///
     name(fig_combined, replace) ycommon col(3)
 	
-graph export "/Users/robert/Library/CloudStorage/OneDrive-KarolinskaInstitutet/Projects/Clara_ED_visits/figures/fig3.png", replace width(4000)
+graph export "/fig3.png", replace width(4000)
 
 *** tables ***
 // % change between the years
