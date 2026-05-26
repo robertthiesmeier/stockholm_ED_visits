@@ -243,6 +243,4 @@ foreach k in 20_34 35_49 50_64 65_79 80+ {
 
 grc1leg g1 g2 g3 g4 g5, ///
     cols(3) ycommon ///
-    title("Sensitivity analysis: knot specification", size(medium)) ///
-    note("Dots = observed. Dashed vertical line = start of projection (2025)." ///
-         "All models: Poisson with population offset, robust SE.", size(vsmall))
+    title("Sensitivity analysis: knot specification", size(medium))
