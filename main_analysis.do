@@ -118,12 +118,12 @@ end
 sort agegroup year
 
 gen ed_rate = 1000 * visits / popsize if visits != .
-gen ln_pop  = ln(popsize)
+gen ln_pop = ln(popsize)
 gen pred_visits = .
 gen pred_lb = .
 gen pred_ub = .
 
-* Poisson model per age group, write predictions back
+* Poisson model per age group
 levelsof agegroup, local(groups)
 
 foreach k of local groups {
@@ -219,7 +219,7 @@ foreach k of local groups {
         (line visits year if agegroup=="`k'" & year<=2024, lcolor(black) lwidth(thin) lpattern(dash)), ///
         xline(2024, lpattern(dash) lcolor(gray)) ylab(, labsize(small) nogrid) xlab(, labsize(small) nogrid) ///
         legend(order(3 "Observed" 2 "Projected") pos(6) row(1) size(small)) ///
-        ytitle("ED visits", size(small)) xtitle("Year", size(small)) title("{bf:`title'}", size(small)) name(`fig', replace)
+        ytitle("ED visits", size(small)) xtitle("Year", size(small)) title("{bf:`title'}", size(small)) name(`fig', replace) nodraw
 
     local ++i
 }
