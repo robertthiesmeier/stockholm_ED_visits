@@ -148,12 +148,36 @@ foreach k of local groups {
 
 }
 
-// get rates
+*** rates and CI ***
 gen pred_rate = (pred_visits / popsize) * 1000
 gen predrate_lb = (pred_lb / popsize) * 1000
 gen predrate_ub = (pred_ub / popsize) * 1000
 
-export excel "/ED_visits/data", replace firstrow(variables)
+// observed rates at key years
+foreach y in 2016 2022 2024 {
+    gen r_obs_`y' = ed_rate if year == `y'
+    bysort agegroup: egen rate_obs_`y' = max(r_obs_`y')
+    drop r_obs_`y'
+}
+
+* projected rates + CI at 2030 and 2035
+foreach y in 2030 2035 {
+    gen r_proj_`y' = pred_rate   if year == `y'
+    gen r_proj_lb_`y' = predrate_lb if year == `y'
+    gen r_proj_ub_`y' = predrate_ub if year == `y'
+    bysort agegroup: egen rate_proj_`y' = max(r_proj_`y')
+    bysort agegroup: egen rate_proj_lb_`y' = max(r_proj_lb_`y')
+    bysort agegroup: egen rate_proj_ub_`y' = max(r_proj_ub_`y')
+    drop r_proj_`y' r_proj_lb_`y' r_proj_ub_`y'
+}
+
+bysort agegroup: keep if _n == 1
+
+list agegroup ///
+    rate_obs_2016 rate_obs_2022 rate_obs_2024 ///
+    rate_proj_2030 rate_proj_lb_2030 rate_proj_ub_2030 ///
+    rate_proj_2035 rate_proj_lb_2035 rate_proj_ub_2035 ///
+    , noobs clean table
 
 *** figures ***
 // with rate	
@@ -180,8 +204,6 @@ tw ///
 	xlab(2016(2)2034, nogrid labsize(small)) ylab(#8, format(%9.0fc) nogrid labsize(small)) /// 
 	xtitle("Years", size(small)) ytitle("ED visits per 1.000 population", size(small))
 	
-graph export "/fig1.png", replace width(4000)
-
 tw /// 
 	(rarea pred_lb pred_ub year if agegroup== "20_34", color("199 223 241%50") lcolor(%0)) ///  
     (line pred_visits year if agegroup=="20_34", lcolor("199 223 241") lwidth(medthick)) ///
@@ -200,8 +222,6 @@ tw ///
 	xlab(2016(2)2034, nogrid labsize(small)) ylab(, nogrid labsize(small)) /// 
 	xtitle("Years", size(small)) ytitle("Projected number of ED visits", size(small))
 	
-graph export "/fig2.png", replace width(4000)
-
 // alternative (single graphs)	
 local titles `""20–34 years" "35–49 years" "50–64 years" "65–79 years" "80+ years""'
 local figs "fig_2034 fig_3549 fig_5064 fig_6579 fig_80p"
@@ -227,28 +247,3 @@ foreach k of local groups {
 grc1leg fig_2034 fig_3549 fig_5064 fig_6579 fig_80p, ///
     title("{bf:ED Visit Projections by Age Group in Stockholm}", size(small)) ///
     name(fig_combined, replace) ycommon col(3)
-	
-graph export "/fig3.png", replace width(4000)
-
-*** tables ***
-// % change between the years
-foreach y in 2022 2024 2030 2035 {
-    gen v`y' = visits if year == `y' & year <= 2024
-    gen p`y' = pred_visits if year == `y'
-    bysort agegroup: egen vis`y'  = max(v`y')
-    bysort agegroup: egen pred`y' = max(p`y')
-    drop v`y' p`y'
-}
-
-* % change observed: 2022 to 2024
-gen pct_obs_2022_2024 = ((vis2024 - vis2022) / vis2022) * 100
-
-* % change projected: 2024 to 2030 and 2024 to 2035
-gen pct_proj_2024_2030 = ((pred2030 - pred2024) / pred2024) * 100
-gen pct_proj_2024_2035 = ((pred2035 - pred2024) / pred2024) * 100
-
-bysort agegroup: keep if _n == 1
-list agegroup pct_obs_2022_2024 pct_proj_2024_2030 pct_proj_2024_2035, ///
-    noobs clean table 
-
-exit 
